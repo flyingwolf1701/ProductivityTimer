@@ -1,0 +1,30 @@
+{
+    "manifest_version": 3,
+    "name": "Productivity Timer",
+    "version": "0.1.0",
+    "description": "A timer extension to help with time blindness",
+    "permissions": ["storage", "alarms", "activeTab", "tabs", "storage", "scripting"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "images/icon16.svg",
+        "32": "images/icon32.svg",
+        "48": "images/icon48.svg",
+        "128": "images/icon128.svg"
+      }
+    },
+    "options_page": "options.html",
+  
+    "background": {
+      "service_worker": "background.js"
+    },
+    "icons": {
+        "16": "images/icon16.svg",
+        "32": "images/icon32.svg",
+        "48": "images/icon48.svg",
+        "128": "images/icon128.svg"
+    },
+    "host_permissions": [
+        "https://www.google.com/*"
+    ]
+  }

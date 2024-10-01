@@ -1,0 +1,6 @@
+<svg width='128' height='128' xmlns='http://www.w3.org/2000/svg'>
+  <circle cx='64' cy='64' r='43.52' fill='black'/>
+  <circle cx='64' cy='20.48' r='7.68' fill='black'/>
+  <circle cx='64' cy='64' r='33.28' fill='white'/>
+  <path d='M46.08 56.32 L64 74.24 L97.28 38.4' stroke='green' stroke-width='7.68' fill='none'/>
+</svg>

@@ -1,0 +1,6 @@
+<svg width="48" height="48" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="24.0" cy="24.0" r="16.32" fill="black"/>
+  <circle cx="24.0" cy="7.68" r="2.88" fill="black"/>
+  <circle cx="24.0" cy="24.0" r="12.48" fill="white"/>
+  <path d='M17.28 21.12 L24.0 27.84 L36.48 14.4' stroke='green' stroke-width='2.88' fill='none'/>
+</svg>
