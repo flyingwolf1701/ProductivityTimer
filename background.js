@@ -4,9 +4,7 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-chrome.storage.local.get('name', data => {
 
-})
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
@@ -22,9 +20,31 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
             })
                 .then(() => {
                     console.log("INJECT THE FOREGROUND SCRIPT");
+                    chrome.tabs.sendMessage(tabId, {
+                        message: 'change_name',
+                        payload: 'John'
+                    })
                 })
         })
             .catch(err => console.log("ERROR: ", err));
+    }
+});
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.message === 'get_name') {
+        chrome.storage.local.get('name', data => {
+            if (chrome.runtime.lastError) {
+                sendResponse({
+                    message: 'fail'
+                });
+                return;
+            }
+            sendResponse({
+                message: 'success',
+                payload: data.name
+            });
+        });
+        return true;
     }
 });
 

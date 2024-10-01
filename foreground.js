@@ -16,3 +16,11 @@ ce_main_container.appendChild(ce_input);
 ce_main_container.appendChild(ce_button);
 
 document.querySelector('body').appendChild(ce_main_container);
+
+
+
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//     if (request.message === 'change_name') {
+//         ce_name.innerHTML = `Hello ${request.payload}`;
+//     }
+// });
