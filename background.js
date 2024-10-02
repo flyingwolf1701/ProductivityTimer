@@ -1,99 +1,91 @@
-chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.local.set({
-        name: "Jack"
+let timer;
+let isRunning = false;
+let seconds = 0;
+let lapSeconds = 0;
+let laps = [];
+let currentLap = 1;
+let showLapTime = false;
+let port;
+
+chrome.runtime.onConnect.addListener((popupPort) => {
+    port = popupPort;
+    port.onMessage.addListener((request) => {
+        switch (request.action) {
+            case 'startTimer':
+                startTimer();
+                break;
+            case 'stopTimer':
+                stopTimer();
+                break;
+            case 'resetTimer':
+                resetTimer();
+                break;
+            case 'lap':
+                lap();
+                port.postMessage({action: 'updatePopup', seconds: seconds, lapSeconds: lapSeconds, currentLap: currentLap, laps: laps});
+                break;
+            case 'updateBadgeOptions':
+                chrome.storage.local.get('showLapTime', (result) => {
+                    showLapTime = result.showLapTime;
+                    updateBadge();
+                });
+                break;
+            default:
+                console.error(`Unknown action: ${request.action}`);
+        }
     });
 });
 
-
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete' && /^http/.test(tab.url)) {
-        chrome.scripting.insertCSS({
-            target: {tabId: tabId},
-            files: ["./foreground_styles.css"]
-        })
-        .then(() => {
-            console.log("INJECT THE FOREGROUND STYLES");
-            chrome.scripting.executeScript({
-                target: {tabId: tabId},
-                files: ["./foreground.js"]
-            })
-                .then(() => {
-                    console.log("INJECT THE FOREGROUND SCRIPT");
-                    chrome.tabs.sendMessage(tabId, {
-                        message: 'change_name',
-                        payload: 'John'
-                    })
-                })
-        })
-            .catch(err => console.log("ERROR: ", err));
+function startTimer() {
+    if (!isRunning) {
+        isRunning = true;
+        timer = setInterval(() => {
+            seconds++;
+            lapSeconds++;
+            updateBadge();
+            port.postMessage({action: 'updatePopup', seconds: seconds, lapSeconds: lapSeconds, currentLap: currentLap, laps: laps});
+        }, 1000);
     }
-});
+}
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.message === 'get_name') {
-        chrome.storage.local.get('name', data => {
-            if (chrome.runtime.lastError) {
-                sendResponse({
-                    message: 'fail'
-                });
-                return;
-            }
-            sendResponse({
-                message: 'success',
-                payload: data.name
-            });
-        });
-        return true;
+function stopTimer() {
+    if (isRunning) {
+        clearInterval(timer);
+        isRunning = false;
     }
-});
+}
 
+function resetTimer() {
+    stopTimer();
+    seconds = 0;
+    lapSeconds = 0;
+    laps = [];
+    currentLap = 1;
+    updateBadge();
+    port.postMessage({action: 'updatePopup', seconds: seconds, lapSeconds: lapSeconds, currentLap: currentLap, laps: laps});
+}
 
-// let timer;
-// let isRunning = false;
-// let seconds = 0;
+function updateBadge() {
+    if (showLapTime && laps.length > 0) {
+        const lapMinutes = Math.floor(lapSeconds / 60);
+        const lapSecs = lapSeconds % 60;
+        chrome.action.setBadgeText({text: `${padZero(lapMinutes)}:${padZero(lapSecs)}`});
+    } else {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        chrome.action.setBadgeText({text: `${padZero(minutes)}:${padZero(secs)}`});
+    }
+}
 
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//     if (request.action === 'startTimer') {
-//         startTimer();
-//     } else if (request.action === 'stopTimer') {
-//         stopTimer();
-//     } else if (request.action === 'resetTimer') {
-//         resetTimer();
-//     } else if (request.action === 'getTime') {
-//         sendResponse({seconds: seconds, isRunning: isRunning});
-//     }
-// });
+function lap() {
+    const lapTime = lapSeconds;
+    const minutes = Math.floor(lapTime / 60);
+    const secs = lapTime % 60;
+    laps.push(`${padZero(minutes)}:${padZero(secs)}`);
+    lapSeconds = 0;
+    currentLap++;
+}
 
-// function startTimer() {
-//     if (!isRunning) {
-//         isRunning = true;
-//         timer = setInterval(() => {
-//             seconds++;
-//             updateBadge();
-//         }, 1000);
-//     }
-// }
-
-// function stopTimer() {
-//     if (isRunning) {
-//         clearInterval(timer);
-//         isRunning = false;
-//     }
-// }
-
-// function resetTimer() {
-//     stopTimer();
-//     seconds = 0;
-//     updateBadge();
-// }
-
-// function updateBadge() {
-//     const minutes = Math.floor(seconds / 60);
-//     const secs = seconds % 60;
-//     chrome.action.setBadgeText({text: `${padZero(minutes)}:${padZero(secs)}`});
-// }
-
-// function padZero(num) {
-//     return num.toString().padStart(2, '0');
-// }
+function padZero(num) {
+    return num.toString().padStart(2, '0');
+}

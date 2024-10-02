@@ -13,7 +13,7 @@
         "128": "images/icon128.svg"
       }
     },
-    "options_page": "options.html",
+    "options_page": "./education/options.html",
   
     "background": {
       "service_worker": "background.js"

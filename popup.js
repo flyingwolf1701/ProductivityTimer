@@ -1,58 +1,55 @@
-// let timer;
-// let isRunning = false;
-// let seconds = 0;
+document.addEventListener('DOMContentLoaded', () => {
+    const timerDisplay = document.getElementById('timer-display');
+    const lapDisplay = document.getElementById('lap-display');
+    const startButton = document.getElementById('start');
+    const stopButton = document.getElementById('stop');
+    const resetButton = document.getElementById('reset');
+    const lapButton = document.getElementById('lap');
+    const lapList = document.getElementById('lap-list');
+    const showLapTimeCheckbox = document.getElementById('show-lap-time');
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     const timerDisplay = document.getElementById('timer-display');
-//     const startPauseButton = document.getElementById('start-pause');
-//     const stopButton = document.getElementById('stop');
-//     const resetButton = document.getElementById('reset');
+    let port = chrome.runtime.connect({name: 'popup'});
 
-//     startPauseButton.addEventListener('click', toggleTimer);
-//     stopButton.addEventListener('click', stopTimer);
-//     resetButton.addEventListener('click', resetTimer);
+    startButton.addEventListener('click', () => { port.postMessage({action: 'startTimer'}); });
+    stopButton.addEventListener('click', () => { port.postMessage({action: 'stopTimer'}); });
+    resetButton.addEventListener('click', () => { port.postMessage({action: 'resetTimer'}); });
+    lapButton.addEventListener('click', () => { port.postMessage({action: 'lap'}); });
+    showLapTimeCheckbox.addEventListener('change', updateBadgeOptions);
 
-//     function toggleTimer() {
-//         if (isRunning) {
-//             clearInterval(timer);
-//             startPauseButton.textContent = 'Start';
-//         } else {
-//             timer = setInterval(updateTimer, 1000);
-//             startPauseButton.textContent = 'Pause';
-//         }
-//         isRunning = !isRunning;
-//     }
+    lapDisplay.style.display = 'none';
+    lapList.style.display = 'none';
 
-//     function stopTimer() {
-//         clearInterval(timer);
-//         isRunning = false;
-//         startPauseButton.textContent = 'Start';
-//     }
+    port.onMessage.addListener((request) => {
+        if (request.action === 'updatePopup') {
+            const hours = Math.floor(request.seconds / 3600);
+            const minutes = Math.floor((request.seconds % 3600) / 60);
+            const secs = request.seconds % 60;
+            timerDisplay.textContent = `${padZero(hours)}:${padZero(minutes)}:${padZero(secs)}`;
 
-//     function resetTimer() {
-//         clearInterval(timer);
-//         isRunning = false;
-//         seconds = 0;
-//         updateDisplay();
-//         startPauseButton.textContent = 'Start';
-//     }
+            if (request.laps.length > 0) {
+                lapDisplay.style.display = 'block';
+                lapList.style.display = 'block';
 
-//     function updateTimer() {
-//         seconds++;
-//         updateDisplay();
-//     }
+                const lapMinutes = Math.floor(request.lapSeconds / 60);
+                const lapSecs = request.lapSeconds % 60;
+                lapDisplay.textContent = `Lap ${request.currentLap}: ${padZero(lapMinutes)}:${padZero(lapSecs)}`;
 
-//     function updateDisplay() {
-//         const hours = Math.floor(seconds / 3600);
-//         const minutes = Math.floor((seconds % 3600) / 60);
-//         const secs = seconds % 60;
-//         timerDisplay.textContent = `${padZero(hours)}:${padZero(minutes)}:${padZero(secs)}`;
-        
-//         // Update badge text
-//         chrome.action.setBadgeText({text: `${padZero(minutes)}:${padZero(secs)}`});
-//     }
+                const lapHtml = request.laps.map((lapTime, index) => {
+                    return `<div>Lap ${index + 1}: ${lapTime}</div>`;
+                }).join('');
+                lapList.innerHTML = lapHtml;
+            }
 
-//     function padZero(num) {
-//         return num.toString().padStart(2, '0');
-//     }
-// });
+            updateBadgeOptions();
+        }
+    });
+
+    function updateBadgeOptions() {
+        chrome.storage.local.set({showLapTime: showLapTimeCheckbox.checked});
+        port.postMessage({action: 'updateBadgeOptions'});
+    }
+
+    function padZero(num) {
+        return num.toString().padStart(2, '0');
+    }
+});

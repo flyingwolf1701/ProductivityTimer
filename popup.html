@@ -8,34 +8,108 @@
 </head>
 <style>
     body {
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 250px;
-    height: 500px;
-    color: white;
-    font-size: 30px;
-    background-color: red;
+        display:flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 375px;
+        height: auto;
+        color: white;
+        font-size: 30px;
+        background-color: darkslategray;
+    }
+    #lap-display {
+        font-size: 20px;
+    }
+
+    #lap-list {
+        font-size: 15px;
+    }
+    .switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  width: 40px;
+  height: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 20px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>
 <body>
-    <!-- <div id="timer-display">00:00:00</div>
+    <div id="timer-display">00:00:00</div>
+    <div id="lap-display"></div>
     <div id="controls">
-        <button id="start-pause">Start/Pause</button>
+        <button id="start">Start</button>
         <button id="stop">Stop</button>
         <button id="reset">Reset</button>
+        <button id="lap">Lap</button>
     </div>
-    <div id="tracker-controls">
-        <button id="current-tracker">Current Tracker</button>
-        <button id="tracker-list">Tracker List</button>
-        <button id="create-tracker">Create Tracker</button>
-    </div> -->
-    <!-- <div id="tracker-info"></div> -->
-    <div>
-        <p>hello world</p>
-    </div>
+    <br>
+    <div id="lap-list"></div>
+    <br>
+    <div id="badge-options">
+        <label class="switch">
+          <input type="checkbox" id="show-lap-time">
+          <span class="slider round"></span>
+        </label>
+        <label for="show-lap-time"></label>
+      </div>
+    
 
-    <script src="popup_script.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>
