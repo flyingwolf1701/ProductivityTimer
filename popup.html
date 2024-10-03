@@ -7,87 +7,116 @@
     <!-- <link rel="stylesheet" href="styles.css"> -->
 </head>
 <style>
-    body {
-        display:flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        width: 375px;
-        height: auto;
-        color: white;
-        font-size: 30px;
-        background-color: darkslategray;
+  body {
+      display:flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 375px;
+      height: auto;
+      color: white;
+      font-size: 30px;
+      background-color: darkslategray;
     }
+
     #lap-display {
         font-size: 20px;
     }
 
     #lap-list {
         font-size: 15px;
+        padding-top: 2%;
     }
+
     .switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    width: 40px;
+    height: 20px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    transform: translateX(20px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 20px;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+  .menu {
+  display: flex;
+  justify-content: space-between;
+  font-size: small;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5px;
+  margin-top: 10px;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
+.menu div {
+  padding: 1px 20px;
+  border-bottom: 2px solid transparent;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  width: 40px;
-  height: 20px;
 }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+.menu div:hover {
+  border-bottom: 2px solid #ccc;
 }
 
-input:checked + .slider {
-  background-color: #2196F3;
+.menu div.active {
+  border-bottom: 2px solid #2196F3;
+  color: #2196F3;
 }
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(20px);
-  -ms-transform: translateX(20px);
-  transform: translateX(20px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 20px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
+  
 </style>
 <body>
     <div id="timer-display">00:00:00</div>
@@ -98,16 +127,30 @@ input:checked + .slider:before {
         <button id="reset">Reset</button>
         <button id="lap">Lap</button>
     </div>
-    <br>
+    
+    
+    <div class="menu">
+      <div class="menu-timer-current active">Current Timer</div>
+      <div class="menu-timer-list">Timer List</div>
+      <div class="menu-timer-create">Create Timer</div>
+    </div>
     <div id="lap-list"></div>
     <br>
     <div id="badge-options">
-        <label class="switch">
-          <input type="checkbox" id="show-lap-time">
-          <span class="slider round"></span>
-        </label>
-        <label for="show-lap-time"></label>
-      </div>
+      <label class="switch">
+        <input type="checkbox" id="show-lap-time">
+        <span class="slider round"></span>
+      </label>
+      <label for="show-lap-time"></label>
+    </div>
+    <br>
+    <div id="create-timer-content" class="tab-content">
+      <input id="hours-input" type="number" placeholder="Hours" min="0">
+      <input id="minutes-input" type="number" placeholder="Minutes" min="0">
+      <button id="start-countdown">Start Countdown</button>
+      <button id="stop-countdown">Stop Countdown</button>
+      <button id="reset-countdown">Reset Countdown</button>
+  </div>
     
 
     <script src="popup.js"></script>

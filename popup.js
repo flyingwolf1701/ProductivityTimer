@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const lapButton = document.getElementById('lap');
     const lapList = document.getElementById('lap-list');
     const showLapTimeCheckbox = document.getElementById('show-lap-time');
+    const menuItems = document.querySelectorAll('.menu div');
+    
 
     let port = chrome.runtime.connect({name: 'popup'});
 
@@ -40,16 +42,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 lapList.innerHTML = lapHtml;
             }
 
-            updateBadgeOptions();
+            showLapTimeCheckbox.checked = request.showLapTime;
         }
     });
 
     function updateBadgeOptions() {
-        chrome.storage.local.set({showLapTime: showLapTimeCheckbox.checked});
-        port.postMessage({action: 'updateBadgeOptions'});
+        port.postMessage({action: 'updateBadgeOptions', showLapTime: showLapTimeCheckbox.checked});
     }
 
     function padZero(num) {
         return num.toString().padStart(2, '0');
     }
+
+    menuItems.forEach((menuItem) => {
+        menuItem.addEventListener('click', () => {
+          // Remove the active class from all menu items
+          menuItems.forEach((item) => item.classList.remove('active'));
+          // Add the active class to the current menu item
+          menuItem.classList.add('active');
+          // Update the tab content
+          // You'll need to add the logic to update the tab content here
+        });
+      });
 });
