@@ -133,7 +133,12 @@
       <div class="menu-timer-current active">Current Timer</div>
       <div class="menu-timer-list">Timer List</div>
       <div class="menu-timer-create">Create Timer</div>
-    </div>
+  </div>
+  <div id="timer-list" style="display: none;"></div>
+  <div id="timer-type"></div>
+  <div id="countdown-input-container" style="display: none;"></div>
+    <input id="countdown-input" type="number" placeholder="Enter countdown duration">
+</div>
     <div id="lap-list"></div>
     <br>
     <div id="badge-options">
@@ -144,13 +149,7 @@
       <label for="show-lap-time"></label>
     </div>
     <br>
-    <div id="create-timer-content" class="tab-content">
-      <input id="hours-input" type="number" placeholder="Hours" min="0">
-      <input id="minutes-input" type="number" placeholder="Minutes" min="0">
-      <button id="start-countdown">Start Countdown</button>
-      <button id="stop-countdown">Stop Countdown</button>
-      <button id="reset-countdown">Reset Countdown</button>
-  </div>
+    
     
 
     <script src="popup.js"></script>

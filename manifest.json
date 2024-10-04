@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Productivity Timer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A timer extension to help with time blindness",
     "permissions": ["storage", "alarms", "activeTab", "tabs", "storage", "scripting"],
     "action": {
