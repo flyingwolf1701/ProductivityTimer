@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Productivity Timer Vue",
+  "version": "0.3.0",
+  "description": "A timer extension to help with time blindness",
+  "permissions": [
+    "storage",
+    "alarms",
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+          "16": "public/images/icon16.svg",
+          "32": "public/images/icon32.svg",
+          "48": "public/images/icon48.svg",
+          "128": "public/images/icon128.svg"
+        }
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "icons": {
+        "16": "public/images/icon16.svg",
+          "32": "public/images/icon32.svg",
+          "48": "public/images/icon48.svg",
+          "128": "public/images/icon128.svg"
+    }
+}
